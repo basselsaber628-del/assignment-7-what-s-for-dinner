@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dinner</title>
+
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/all.min.css"> 
+
+
+  <style>
+    body { background: #fffbeb; }
+
+   
+    .brand-icon {
+      width: 3rem; height: 3rem; color: #fff;
+      background: linear-gradient(135deg, #f97316, #ef4444);
+      justify-content: center;
+    }
+    .nav-actions i { color: #4b5563; cursor: pointer; }
+    .nav-actions i:hover { color: #f97316; }
+    .avatar { width: 2.5rem; height: 2.5rem; object-fit: cover; }
+
+   
+    .text-orange { color: #f97316 !important; }
+    .text-orange-dark { color: #ea580c !important; }
+    .bg-orange { background-color: #f97316 !important; }
+    .bg-orange-soft { background-color: #ffedd5; }
+    .btn.bg-orange-soft:hover { background-color: #fed7aa; }
+    .panel-soft { background: linear-gradient(135deg, #fff7ed, #fffbeb); }
+    .btn-gradient {
+      background: linear-gradient(90deg, #f97316, #ef4444);
+      color: #fff; border: 0;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn-gradient:hover { color: #fff; transform: scale(1.05); box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.2); }
+    .blur-bar { backdrop-filter: blur(6px); }
+    .sz-24 { width: 1.5rem; height: 1.5rem; }
+    .sz-40 { width: 2.5rem; height: 2.5rem; }
+    .sz-48 { width: 3rem; height: 3rem; }
+    .tab-pane-box { height: 350px; overflow-y: auto; }
+    .tab-button { border: 0; border-bottom: 2px solid transparent; background: transparent; }
+    .tab-button.active { color: #ea580c; border-bottom-color: #ea580c; }
+    .recipe-media { height: 400px; }
+    @media (min-width: 992px) {
+      .recipe-card { height: 750px; }
+      .recipe-media { height: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="bg-white border-bottom shadow-sm">
+    <div class="container-xxl px-4 py-2 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <div class="brand-icon d-flex align-items-center rounded-circle me-2">
+          <i class="fa-solid fa-utensils"></i>
+        </div>
+        <div>
+          <h1 class="fs-5 fw-bold mb-0">What's For Dinner</h1>
+          <p class="small text-secondary mb-0">Your daily meal inspiration</p>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="nav-actions d-flex gap-3">
+          <i class="fa-solid fa-bookmark fa-lg"></i>
+          <i class="fa-solid fa-clock-rotate-left fa-lg"></i>
+          <i class="fa-solid fa-gear fa-lg"></i>
+        </div>
+        <img class="avatar rounded-circle border border-danger" src="images/imgi_1_avatar-4.jpg" alt="Profile">
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content" class="container px-4 py-4">
+    <section id="recipe-display-section" class="bg-white rounded-5 shadow-lg overflow-hidden mb-4 my-4 border">
+      <div class="row g-0 recipe-card">
+
+        <!-- Image column -->
+        <div id="recipe-media" class="col-lg-5 position-relative overflow-hidden recipe-media">
+          <img id="recipe-image" class="w-100 h-100 object-fit-cover" src="" alt="">
+
+          <div class="position-absolute top-0 start-0 m-3 bg-white rounded-pill px-3 py-2 shadow d-flex align-items-center gap-2">
+            <i class="fa-solid fa-star text-warning"></i>
+            <span class="fw-semibold text-dark" id="rating-average"></span>
+            <span class="text-secondary small" id="rating-quantity"></span>
+          </div>
+
+          <div class="position-absolute bottom-0 start-0 end-0 m-3 bg-white bg-opacity-75 blur-bar rounded-4 p-3 p-md-4 shadow">
+            <div class="row row-cols-3 g-3 text-center">
+              <div class="col">
+                <i class="fa-solid fa-clock text-orange fs-4 mb-2"></i>
+                <p class="small text-secondary mb-0">Prep Time</p>
+                <p class="fw-bold text-dark mb-0" id="prep-time-display"></p>
+              </div>
+              <div class="col">
+                <i class="fa-solid fa-fire-burner text-danger fs-4 mb-2"></i>
+                <p class="small text-secondary mb-0">Cook Time</p>
+                <p class="fw-bold text-dark mb-0" id="cook-time-display"></p>
+              </div>
+              <div class="col">
+                <i class="fa-solid fa-users text-primary fs-4 mb-2"></i>
+                <p class="small text-secondary mb-0">Servings</p>
+                <p class="fw-bold text-dark mb-0" id="servings-display"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+       
+        <div class="col-lg-7 p-4 p-lg-5 h-100 overflow-y-auto">
+
+          <div class="d-flex flex-column flex-md-row gap-3 align-items-start justify-content-between mb-4">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge rounded-pill bg-success-subtle text-success-emphasis" id="difficulty-badge"></span>
+                <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis" id="category-badge"></span>
+              </div>
+              <h3 class="fs-2 fw-bold text-dark mb-2" id="recipe-name"></h3>
+              <p class="text-secondary mb-0" id="recipe-description"></p>
+            </div>
+            <div class="order-first order-md-0 align-self-end align-self-md-center d-flex gap-2">
+              <button class="btn bg-orange-soft text-orange-dark rounded-3 sz-48 d-flex align-items-center justify-content-center p-0" aria-label="Save recipe">
+                <i class="fa-solid fa-bookmark"></i>
+              </button>
+              <button class="btn bg-orange-soft text-orange-dark rounded-3 sz-48 d-flex align-items-center justify-content-center p-0" aria-label="Share recipe">
+                <i class="fa-solid fa-share-nodes"></i>
+              </button>
+            </div>
+          </div>
+
+          <div id="time-warning" class="alert alert-danger border-0 border-start border-4 border-danger mb-4 d-none">
+            <div class="d-flex align-items-center">
+              <i class="fa-solid fa-triangle-exclamation text-danger fs-4 me-3"></i>
+              <div>
+                <p class="fw-semibold mb-0">Extended Preparation Time</p>
+                <p class="small mb-0">This recipe requires more than 45 minutes to prepare. Plan accordingly!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="border-bottom mb-4 p-3">
+            <div class="d-flex gap-2">
+              <button class="tab-button active flex-fill pb-2 fw-semibold d-flex align-items-center justify-content-center text-nowrap" data-tab="ingredients">
+                <i class="fa-solid fa-list-check me-1 me-md-2"></i><span class="text-truncate">Ingredients</span>
+              </button>
+              <button class="tab-button flex-fill pb-2 fw-semibold text-secondary d-flex align-items-center justify-content-center text-nowrap" data-tab="instructions">
+                <i class="fa-solid fa-book-open me-1 me-md-2"></i><span class="text-truncate">Instructions</span>
+              </button>
+              <button class="tab-button flex-fill pb-2 fw-semibold text-secondary d-flex align-items-center justify-content-center text-nowrap" data-tab="nutrition">
+                <i class="fa-solid fa-chart-pie me-1 me-md-2"></i><span class="text-truncate">Nutrition</span>
+              </button>
+              <button class="tab-button flex-fill pb-2 fw-semibold text-secondary d-flex align-items-center justify-content-center text-nowrap" data-tab="tips">
+                <i class="fa-solid fa-lightbulb me-1 me-md-2"></i><span class="text-truncate">Chef's Tips</span>
+              </button>
+            </div>
+          </div>
+
+         
+          <div id="ingredients-tab" class="tab-content tab-pane-box">
+            <div class="panel-soft rounded-4 p-4">
+              <ul class="list-unstyled d-flex flex-column gap-3 mb-0" id="ingredients-list"></ul>
+            </div>
+          </div>
+
+      
+          <div id="instructions-tab" class="tab-content tab-pane-box d-none">
+            <div class="d-flex flex-column gap-4" id="instructions-list"></div>
+          </div>
+
+        
+          <div id="nutrition-tab" class="tab-content tab-pane-box d-none">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
+                  <div class="d-flex align-items-center">
+                    <div class="sz-40 bg-orange-soft rounded-3 d-flex align-items-center justify-content-center me-3"><i class="fa-solid fa-fire text-orange-dark"></i></div>
+                    <span class="fw-medium small">Calories</span>
+                  </div>
+                  <span class="fs-5 fw-bold text-dark" id="calories-value"></span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
+                  <div class="d-flex align-items-center">
+                    <div class="sz-40 bg-primary-subtle rounded-3 d-flex align-items-center justify-content-center me-3"><i class="fa-solid fa-dumbbell text-primary"></i></div>
+                    <span class="fw-medium small">Protein</span>
+                  </div>
+                  <span class="fs-5 fw-bold text-dark" id="protein-value"></span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
+                  <div class="d-flex align-items-center">
+                    <div class="sz-40 bg-warning-subtle rounded-3 d-flex align-items-center justify-content-center me-3"><i class="fa-solid fa-wheat-awn text-warning-emphasis"></i></div>
+                    <span class="fw-medium small">Carbohydrates</span>
+                  </div>
+                  <span class="fs-5 fw-bold text-dark" id="carbs-value"></span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
+                  <div class="d-flex align-items-center">
+                    <div class="sz-40 bg-danger-subtle rounded-3 d-flex align-items-center justify-content-center me-3"><i class="fa-solid fa-droplet text-danger"></i></div>
+                    <span class="fw-medium small">Fat</span>
+                  </div>
+                  <span class="fs-5 fw-bold text-dark" id="fat-value"></span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
+                  <div class="d-flex align-items-center">
+                    <div class="sz-40 bg-success-subtle rounded-3 d-flex align-items-center justify-content-center me-3"><i class="fa-solid fa-seedling text-success"></i></div>
+                    <span class="fw-medium small">Fiber</span>
+                  </div>
+                  <span class="fs-5 fw-bold text-dark" id="fiber-value"></span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
+                  <div class="d-flex align-items-center">
+                    <div class="sz-40 rounded-3 d-flex align-items-center justify-content-center me-3" style="background:#fce7f3"><i class="fa-solid fa-cube" style="color:#db2777"></i></div>
+                    <span class="fw-medium small">Sodium</span>
+                  </div>
+                  <span class="fs-5 fw-bold text-dark" id="sodium-value"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips -->
+          <div id="tips-tab" class="tab-content tab-pane-box d-none">
+            <div class="d-flex flex-column gap-3" id="tips-list"></div>
+          </div>
+
+          <div class="d-flex align-items-center gap-3 mt-5 pt-4 border-top">
+            <button id="try-another-btn" class="btn btn-gradient px-3 px-md-4 py-2 py-md-3 rounded-3 fw-semibold shadow">
+              <i class="fa-solid fa-rotate me-1 me-md-2"></i>Try Another Recipe
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+ 
+  <script src="js/bootstrap.bundle.min.js"></script>
+
+  <script>
+ 
+    const recipes = [
+      {
+        name: "Creamy Spaghetti Carbonara",
+        description: "A classic Italian pasta dish with eggs, cheese, and pancetta",
+        category: "Italian", difficulty: "Easy",
+        prep: 15, cook: 20, servings: 4, rating: 4.8, reviews: 234,
+        image: "images/img4.jpg",
+        ingredients: [
+          "400g spaghetti pasta", "200g pancetta or guanciale, diced", "4 large eggs",
+          "100g Pecorino Romano cheese, grated", "50g Parmesan cheese, grated",
+          "Freshly ground black pepper", "Salt for pasta water"
+        ],
+        instructions: [
+          "Boil the spaghetti in well-salted water until al dente. Save a cup of the pasta water.",
+          "Fry the pancetta in a dry pan until crisp, then turn off the heat.",
+          "Whisk the eggs with the Pecorino, Parmesan, and plenty of black pepper.",
+          "Toss the hot pasta with the pancetta, then take the pan off the heat and stir in the egg mixture, adding pasta water a splash at a time until creamy.",
+          "Serve right away with extra cheese and pepper."
+        ],
+        nutrition: { calories: "520 kcal", protein: "28g", carbs: "62g", fat: "18g", fiber: "3g", sodium: "680mg" },
+        tips: [
+          "Use room temperature eggs for a smoother sauce consistency",
+          "Take the pan off the heat before adding the eggs so they don't scramble",
+          "Pasta water is what makes the sauce glossy, so don't skip it"
+        ]
+      },
+      {
+        name: "Caesar Salad",
+        description: "Classic salad with crispy romaine and creamy dressing",
+        category: "Mediterranean", difficulty: "Easy",
+        prep: 15, cook: 0, servings: 2, rating: 4.4, reviews: 198, image: "images/img3.jpg",
+        ingredients: [
+          "1 large romaine lettuce", "1/2 cup Caesar dressing", "1/2 cup parmesan cheese, shaved", "1 cup croutons",
+          "2 anchovy fillets (optional)", "Lemon wedges", "Black pepper" 
+        ],
+        instructions: [
+          "Wash and dry romaine lettuce thoroughly. Tear into bite-sized pieces.",
+          "Place lettuce in a large salad bowl.",
+          "Add Caesar dressing and toss until evenly coated.",
+          "Add croutons and half the parmesan cheese. Toss gently.",
+          "Top with remaining parmesan shavings and anchovies if using.",
+          "Serve immediately with lemon wedges and fresh black pepper."
+        ],
+        nutrition: { calories: "320 kcal", protein: "12g", carbs: "18g", fat: "22g", fiber: "3g", sodium: "680mg" },
+        tips: [
+          "Use cold, crisp lettuce for best texture",
+          "Make homemade croutons for better flavor",
+          "Add grilled chicken for a complete meal",
+          "Don't dress salad until ready to serve"
+        ]
+      },
+      {
+        name: "Slow Braised Beef Stew",
+        description: "Tender beef and root vegetables in a rich, savory broth",
+        category: "Comfort Food", difficulty: "Medium",
+        prep: 50, cook: 120, servings: 6, rating: 4.9, reviews: 312, image: "images/imgi_2_photo-1509722747041-616f39b57569.jpg",
+        ingredients: [
+          "1kg beef chuck, cubed", "3 carrots, sliced", "3 potatoes, cubed", "1 large onion, diced",
+          "3 tbsp tomato paste", "1 liter beef stock", "2 bay leaves", "2 tbsp flour", "Salt and pepper"
+        ],
+        instructions: [
+          "Season the beef and toss it with the flour.",
+          "Brown the beef in batches, then set it aside.",
+          "Cook the onion and tomato paste in the same pot for a few minutes.",
+          "Return the beef, add the stock and bay leaves, and simmer gently for 90 minutes.",
+          "Add the carrots and potatoes and cook 30 more minutes until tender."
+        ],
+        nutrition: { calories: "430 kcal", protein: "36g", carbs: "28g", fat: "18g", fiber: "4g", sodium: "720mg" },
+        tips: [
+          "Brown the beef in batches; crowding the pot steams it instead",
+          "It tastes even better the next day"
+        ]
+      },
+
+
+
+
+      {
+        name: "Chicken Tikka Masala",
+        description: "Rich and creamy Indian curry with tender chicken pieces",
+        category: "Asian", difficulty: "Intermediate",
+        prep: 20, cook: 30, servings: 4, rating: 4.7, reviews: 389, image: "images/img1.jpg",
+        ingredients: [
+          "600g chicken breast, cubed", "1 cup plain yogurt", "2 tablespoons tikka masala paste", "400ml coconut cream",
+          "1 onion, diced", "4 cloves garlic, minced", "2 tablespoons ginger, grated", "400g canned tomatoes", "Fresh cilantro for garnish"
+        ],
+        instructions: [
+          "Marinate chicken in half the yogurt and 1 tablespoon tikka paste for at least 30 minutes.",
+          "Heat oil in a large pan, cook marinated chicken until browned. Remove and set aside.",
+          "In the same pan, sauté onion until soft. Add garlic and ginger, cook for 1 minute.",
+          "Add remaining tikka paste and canned tomatoes. Simmer for 10 minutes.",
+          "Stir in coconut cream and remaining yogurt. Add chicken back to the pan.",
+         "Simmer for 15 minutes until sauce thickens. Garnish with cilantro and serve with rice.",
+        ],
+        nutrition: { calories: "450 kcal", protein: "38g", carbs: "24g", fat: "22g", fiber: "4g", sodium: "760mg" },
+        tips: [
+          "Marinate chicken overnight for deeper flavor",
+          "Use full-fat coconut cream for richest sauce",
+          "Adjust spice level by varying the tikka paste amount",
+          "Serve with naan bread and basmati rice",
+
+        ]
+      },
+
+
+       {
+        name: "French Onion Soup",
+        description: "Rich beef broth with caramelized onions and melted cheese",
+        category: "Mediterranean", difficulty: "Intermediate",
+        prep: 15, cook: 60, servings: 4, rating: 4.7, reviews: 267, image: "images/img5.jpg",
+        ingredients: [
+          "4 large onions, thinly sliced", "4 tablespoons butter", "1 liter beef broth", "1/2 cup white wine",
+          "2 bay leaves", "Fresh thyme", "Baguette slices" ,"200g Gruyère cheese, grated"
+        ],
+        instructions: [
+          "Melt butter in a large pot. Add onions and cook slowly for 40 minutes, stirring occasionally until caramelized.",
+          "Add white wine and deglaze the pot, scraping up brown bits.",
+          "Pour in beef broth, add bay leaves and thyme. Simmer for 20 minutes.",
+          "Meanwhile, toast baguette slices until golden.",
+          "Ladle soup into oven-safe bowls. Top with toasted bread and cheese.",
+          "Broil for 3-5 minutes until cheese is melted and bubbly. Serve hot."
+        ],
+        nutrition: { calories: "380 kcal", protein: "18g", carbs: "36g", fat: "18g", fiber: "4g", sodium: "980mg" },
+        tips: [
+          "Patience is key - don't rush the onion caramelization",
+          "Use good quality beef broth for best flavor",
+          "Gruyère can be substituted with Swiss cheese",
+          "Watch carefully when broiling to avoid burning"
+        ]
+      },
+    ];
+
+  
+    const $ = (id) => document.getElementById(id);
+    let current = -1;
+
+    function renderRecipe(r) {
+      $("recipe-name").textContent = r.name;
+      $("recipe-description").textContent = r.description;
+      $("category-badge").textContent = r.category;
+      $("difficulty-badge").textContent = r.difficulty;
+      $("rating-average").textContent = r.rating;
+      $("rating-quantity").textContent = "(" + r.reviews + " reviews)";
+      $("prep-time-display").textContent = r.prep + " min";
+      $("cook-time-display").textContent = r.cook + " min";
+      $("servings-display").textContent = r.servings + " people";
+
+      const img = $("recipe-image");
+      img.classList.toggle("d-none", !r.image);
+      $("recipe-media").classList.toggle("bg-orange-soft", !r.image);
+      if (r.image) { img.src = r.image; img.alt = r.name; }
+
+      $("time-warning").classList.toggle("d-none", r.prep <= 45);
+
+      $("ingredients-list").innerHTML = r.ingredients.map((item, i) => `
+        <li class="d-flex align-items-start">
+          <div class="sz-24 bg-orange rounded-circle d-flex align-items-center justify-content-center text-white small fw-bold mt-1 me-3 flex-shrink-0">${i + 1}</div>
+          <span class="text-body">${item}</span>
+        </li>`).join("");
+
+      $("instructions-list").innerHTML = r.instructions.map((step, i) => `
+        <div class="d-flex align-items-start">
+          <div class="sz-48 bg-orange rounded-4 d-flex align-items-center justify-content-center text-white fs-5 fw-bold me-3 flex-shrink-0">${i + 1}</div>
+          <div class="flex-grow-1 pt-2"><p class="text-body mb-0">${step}</p></div>
+        </div>`).join("");
+
+      $("calories-value").textContent = r.nutrition.calories;
+      $("protein-value").textContent = r.nutrition.protein;
+      $("carbs-value").textContent = r.nutrition.carbs;
+      $("fat-value").textContent = r.nutrition.fat;
+      $("fiber-value").textContent = r.nutrition.fiber;
+      $("sodium-value").textContent = r.nutrition.sodium;
+
+      $("tips-list").innerHTML = r.tips.map((tip) => `
+        <div class="d-flex align-items-start p-3 bg-warning-subtle rounded-4 border-start border-4 border-warning">
+          <i class="fa-solid fa-check-circle text-warning-emphasis fs-5 me-3 mt-1"></i>
+          <p class="text-body mb-0">${tip}</p>
+        </div>`).join("");
+
+      showTab("ingredients");
+    }
+
+   
+    function showTab(name) {
+      document.querySelectorAll(".tab-button").forEach((btn) => {
+        const active = btn.dataset.tab === name;
+        btn.classList.toggle("active", active);
+        btn.classList.toggle("text-secondary", !active);
+      });
+      document.querySelectorAll(".tab-content").forEach((pane) => {
+        pane.classList.toggle("d-none", pane.id !== name + "-tab");
+      });
+    }
+
+    document.querySelectorAll(".tab-button").forEach((btn) => {
+      btn.addEventListener("click", () => showTab(btn.dataset.tab));
+    });
+
+
+    function pickRandom() {
+      let next;
+      do { next = Math.floor(Math.random() * recipes.length); }
+      while (recipes.length > 1 && next === current);
+      current = next;
+      renderRecipe(recipes[current]);
+    }
+
+    $("try-another-btn").addEventListener("click", pickRandom);
+
+  
+    current = 0;
+    renderRecipe(recipes[0]);
+  </script>
+</body>
+</html>
